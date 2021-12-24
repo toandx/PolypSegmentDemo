@@ -1,0 +1,158 @@
+<html>
+  <head>
+    <title>Semantic Segmentation Demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,  initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link href="./static/css/login.css" rel="stylesheet">
+    <link rel = "icon" href ="./stomach.png" 
+        type = "image/x-icon">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>   
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+    <style type="text/css">
+      .list-group{
+        max-height: 450px;
+        overflow: scroll;
+      }
+    </style>
+  </head>
+  <body>
+     <nav class="navbar navbar-expand-sm bg-info navbar-dark">
+        <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="/home">Trang chủ</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/add_patient">Thêm bệnh nhân</a>
+          </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="/diagnostic">Chuẩn đoán</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/statistic">Thống kê</a>
+        </li>
+        <li class="nav-item" id="admin_tab">
+            <a class="nav-link" href="/admin">Quản trị</a>
+        </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+        <li class="nav-item">
+            <p class="navbar-text" id="hello_txt"></p>
+        </li>
+        <li class="nav-item" id="log_out_link" style="display: none;">
+            <a class="nav-link"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+        </li>
+        <li class="nav-item" id="log_in_link">
+            <a class="nav-link" data-toggle="modal" href="#logInModal"><i class="fa fa-user"></i> Đăng nhập</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/signup"> <i class="fas fa-user-plus"></i> Đăng ký</a>
+        </li>
+        </ul>
+    </nav>
+  <div class="row" style="justify-content:center;margin-top:10px" >
+  <label for="patient_id">Nhập mã bệnh nhân: </label>
+  <input style="display:inline-block;width:40%" type="text" class="ml-2 form-control" id="patient_id"/><br>
+  <button style="display:inline-block;" class="ml-2 btn btn-success" id="search_btn"> Nhập </button>
+  </div>
+  <form enctype = "multipart/form-data" id="upload_data_form">
+            <input type = "file" name = "file" />
+            <button type = "submit" class="btn btn-success" name="predict"/> <span class="spinner-border spinner-border-sm" id="loader" style="display:none;"></span> Thêm ca nội soi </button>
+  </form>
+  <div id="infor_block" style="margin:10px;">
+  <div class="row" style="height: auto; width:100%;">
+    <ul class="list-group col-md-2" id="list_session"></ul>
+    <video id="video_player" style='display: none;' class="col-md-6 video-block" controls>
+      <source type="video/mp4">
+      Trình duyệt của bạn không hỗ trợ HTML5 Video
+    </video>
+    <div id="container" style='display: none;' class="col-md-4 video-block"> <canvas id="myChart"></canvas> </div>
+    <img class="img-fluid p-3 col-md-5 image-block" id="image_inp" >
+    <img class="img-fluid p-3 col-md-5 image-block" id="image_out" >
+  </div>
+  <div class="row" style="height: auto; width:100%; margin-top: 10px">
+    <div class="col-md-4">
+    <div class="form-group">
+        <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+        <label for="session_time">Thời gian khám: </label>
+        <input id="session_time" type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1" />
+        <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+        </div>
+        </div>
+        </div>
+      <label for="creator_name">Bác sỹ phụ trách: </label>
+      <input style="display:inline-block;width:auto" type="text" class="form-control" id="creator_name"><br>
+      <textarea style="margin-top: 10px;" placeholder="Dấu hiệu lâm sàng" class="form-control" rows="2" id="dau_hieu_lam_sang"></textarea>
+      <textarea style="margin-top: 10px;" placeholder="Chuẩn đoán" class="form-control" rows="2" id="chuan_doan"></textarea>
+      <textarea style="margin-top: 10px;" placeholder="Hướng điều trị" class="form-control" rows="2" id="huong_dieu_tri"></textarea>
+      <button style="display:block; margin-top: 10px;float:left;" id="delete_session_btn" class="btn btn-success"> Xóa ca bệnh </button>
+      <button style="display:block; margin-top: 10px;float:right;" id="submit_infor_session_btn" class="btn btn-success"> Thêm ca bệnh </button>
+    </div>
+    <div class="col-md-4">
+      <a style="display:block; margin: 10px;" id="download_resource_link" class="btn btn-success"> Tải xuống dữ liệu phân vùng tự động </a>
+      <a style="display:block; margin: 10px;" id="capture_frame_link" class="btn btn-success"> Chụp ảnh màn hình </a>
+      <a style="display:block; margin: 10px;" id="export_profile_link" class="btn btn-success"> Xuất bệnh án điện tử </a>
+    </div>
+    <div class="col-md-4">
+      <label for="patient_name">Tên bệnh nhân: </label>
+      <input style="display:inline-block;width:auto" type="text" class="form-control" id="patient_name"><br>
+      <label for="patient_age">Tuổi: </label>
+      <input style="display:inline-block;width:auto;margin-top: 10px;" type="number" class="form-control" id="patient_age"><br>
+      <label for="sex">Giới tính:</label>
+      <select id="sex" style="margin-top: 10px;">
+        <option value="male">Nam</option>
+        <option value="female">Nữ</option>
+      </select>
+      <br>
+      <label for="patient_address">Địa chỉ: </label>
+      <input style="display:inline-block;width:auto;margin-top: 10px;" type="text" class="form-control" id="patient_address"><br>
+      <textarea style="margin-top: 10px;"" placeholder="Tiền sử bệnh án" class="form-control" rows="4" id="tien_su_benh_an"></textarea><br>
+      <button style="display:block; margin:auto;" id="update_patient_infor_btn" class="btn btn-success"> Cập nhật </button>
+    </div>
+
+  </div>
+</div>
+    <!-- Login Modal -->
+  <div class="modal" id="logInModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Đăng nhập</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="body-signin text-center">
+            <form class="form-signin" id="form-signin">
+            <h1 class="h3 mb-3 font-weight-normal">Vui lòng đăng nhập</h1>
+            <label for="inputEmail" class="sr-only">Email</label>
+            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+            <label for="inputPassword" class="sr-only">Mật khẩu</label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Đăng nhập</button>
+            <p class="text-danger" id="error_txt" style="display: none;"> Email hoặc mật khẩu không đúng </p>
+            </form>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  </body>
+  <script type="text/javascript" src="./static/js/login.js"></script>
+  <script type="text/javascript" src="./static/js/video_chart.js"></script>
+  <script type="text/javascript" src="./static/js/diagnostic.js"></script>
+  <script type="text/javascript" src="./static/js/diagnostic1.js"></script>
+</html>

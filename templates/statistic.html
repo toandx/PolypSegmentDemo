@@ -1,0 +1,122 @@
+<html>
+	<head>
+		<title>Semantic Segmentation Demo</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, 	initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+		<link href="./static/css/login.css" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-sm bg-info navbar-dark">
+  			<ul class="navbar-nav mr-auto">
+    		<li class="nav-item">
+      			<a class="nav-link" href="/home">Trang chủ</a>
+    		</li>
+        <li class="nav-item">
+            <a class="nav-link" href="/add_patient">Thêm bệnh nhân</a>
+        </li>
+    		<li class="nav-item">
+      			<a class="nav-link" href="/diagnostic">Chuẩn đoán</a>
+    		</li>
+    		<li class="nav-item active">
+      			<a class="nav-link" href="/statistic">Thống kê</a>
+    		</li>
+    		<li class="nav-item" id="admin_tab">
+            <a class="nav-link" href="/admin">Quản trị</a>
+        </li>
+  			</ul>
+  			<ul class="nav navbar-nav navbar-right">
+  			<li class="nav-item">
+  	  			<p class="navbar-text" id="hello_txt"></p>
+  			</li>
+    		<li class="nav-item" id="log_out_link" style="display: none;">
+      			<a class="nav-link"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+    		</li>
+    		<li class="nav-item" id="log_in_link">
+      			<a class="nav-link" data-toggle="modal" href="#logInModal"><i class="fa fa-user"></i> Đăng nhập</a>
+    		</li>
+    		<li class="nav-item">
+      			<a class="nav-link" href="/signup"> <i class="fas fa-user-plus"></i> Đăng ký</a>
+    		</li>
+  			</ul>
+		</nav>
+    <div style="justify-content:center;margin-top:10px; font-size:20px;" >
+      <label for="subject">Thống kê về:</label>
+    <select id="subject" style="margin-top: 10px;">
+      <option value="patient" selected>Bệnh nhân</option>
+      <option value="session">Ca bệnh</option>
+    </select>
+  </div>
+  <div style="margin: 10px;" class="row">
+      <table class="table table-bordered table-dark table-striped" id="patient_table">
+      <thead>
+      <tr>
+        <th>Mã bệnh nhân</th>
+        <th>Tên</th>
+        <th>Tuổi</th>
+        <th>Giới tính</th>
+        <th>Địa chỉ</th>
+        <th>Tiền sử bệnh án</th>
+        <th> Lệnh </th>
+      </tr>
+      </thead>
+      <tbody>
+      </tbody>
+      </table>
+      <table class="table table-bordered table-dark table-striped" id="session_table">
+      <thead>
+      <tr>
+        <th>Mã ca bệnh</th>
+        <th>Mã bệnh nhân</th>
+        <th>Mã bác sỹ phụ trách</th>
+        <th>Thời gian</th>
+        <th>Dấu hiệu lâm sàng</th>
+        <th>Chuẩn đoán</th>
+        <th> Hướng điều trị </th>
+        <th> Lệnh </th>
+      </tr>
+      </thead>
+      <tbody>
+      </tbody>
+      </table>
+    </div>
+  <!-- Login Modal -->
+  <div class="modal" id="logInModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Đăng nhập</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="body-signin text-center">
+           	<form class="form-signin" id="form-signin">
+           	<h1 class="h3 mb-3 font-weight-normal">Vui lòng đăng nhập</h1>
+           	<label for="inputEmail" class="sr-only">Email</label>
+           	<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+           	<label for="inputPassword" class="sr-only">Mật khẩu</label>
+           	<input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+           	<button class="btn btn-lg btn-primary btn-block" type="submit">Đăng nhập</button>
+            <p class="text-danger" id="error_txt" style="display: none;"> Email hoặc mật khẩu không đúng </p>
+           	</form>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+	</body>
+  <script type="text/javascript" src="./static/js/login.js"></script>
+  <script type="text/javascript" src="./static/js/statistic.js"></script>
+</html>
